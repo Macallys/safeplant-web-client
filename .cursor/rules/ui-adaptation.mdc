@@ -1,0 +1,49 @@
+---
+description: Adaptar componentes React de KokonutUI, Skiper UI, Bklit o Figma a Angular, y animar con motion.dev
+globs: src/app/**/*.ts, src/app/**/*.html
+alwaysApply: false
+---
+
+# Adaptación de UI de referencia a Angular
+
+## Fuentes de verdad (en este orden)
+1. Frame de Figma (MCP): medidas, tokens, variables y componentes.
+2. Tokens y componentes ya existentes en el proyecto. Reutiliza antes de crear.
+3. Skill `frontend-design`: solo para lo que Figma no define (estados vacíos, detalles, motion).
+- Con Figma MCP: lee solo el frame o componente indicado, no el archivo completo. El código que devuelva (suele ser React + Tailwind) es REFERENCIA; tradúcelo a Angular.
+
+## Catálogos para revisar
+
+Antes de crear un componente, revisa estas tres páginas. Son referencia React: se traducen con esta regla. No instales el paquete React.
+
+| Catálogo | Página | Para qué mirarlo |
+|---|---|---|
+| KokonutUI | https://kokonutui.com/docs | Componentes de interfaz y motion. Licencia MIT. |
+| Skiper UI | https://skiper-ui.com/ | Componentes poco comunes sobre shadcn. Revisa la licencia de cada pieza antes de copiar. |
+| Bklit UI | https://bklit.com/ | Gráficos para el dashboard de métricas. Los charts son MIT. Bklit Studio (ui.bklit.com/studio) es propietario: no copiarlo. |
+
+## Reglas de traducción desde React/JSX
+- Cero dependencias React: sin wrappers, sin `react`, sin `motion/react` ni `framer-motion`.
+- `className` -> `class`; `onClick` -> `(click)`; `onChange` -> `(input)`/`(change)`; `htmlFor` -> `for`.
+- `useState` -> `signal`; `useMemo` -> `computed`; `useEffect` -> `effect` (o `afterNextRender` si toca DOM); `useRef` -> `viewChild()`/`ElementRef`; props -> `input()`; callbacks -> `output()`.
+- `{cond && <X/>}` -> `@if`; `.map()` -> `@for (... ; track ...)`; children -> `<ng-content>`.
+- `cn()` (clsx + tailwind-merge): conserva una utilidad `cn` propia si ya existe y úsala con `[class]="cn(...)"` y computed signals.
+- Iconos `lucide-react` -> `lucide-angular` (o SVG inline). Primitivas Radix/shadcn -> `@angular/cdk` o componentes ya existentes en el proyecto.
+- Variables CSS de shadcn (`--background`, etc.): mapéalas a los tokens del proyecto, no las dupliques.
+- Si el componente depende de una librería React sin equivalente directo (p. ej. gráficos con visx en Bklit, animaciones `layout`/`layoutId`), no inventes: propón alternativa (D3 directo, `ngx-charts`, FLIP manual con Motion) y avisa antes de implementarla.
+- Antes de copiar un componente revisa su licencia (algunos son de pago o con restricciones). Replica la técnica, no assets ni código con licencia restrictiva.
+
+## Animaciones
+- Simples (hover, fade, color, scale): clases de Tailwind (`transition`, `duration-200`, `ease-out`).
+- Avanzadas (scroll, gestos, stagger, springs): `motion`, importando SOLO desde `"motion"` (`animate`, `inView`, `scroll`, `stagger`, `hover`, `press`).
+- Ejecuta Motion dentro de `afterNextRender` (compatible con SSR) y limpia en `DestroyRef.onDestroy`: `.stop()` en animaciones y la función de cleanup que devuelven `inView`/`scroll`/`hover`.
+- Si no usas zoneless, corre las animaciones continuas con `NgZone.runOutsideAngular`.
+- Entrada/salida con `@if` (equivalente a AnimatePresence): en Angular 22 usa `animate.enter` / `animate.leave` (verifica la firma en Context7). Si el caso no entra en esa API, anima la salida con Motion antes de quitar el nodo (signal `leaving`).
+- Anima solo `transform` y `opacity`. Parametriza duración y easing con constantes compartidas del proyecto.
+
+## Verificación (Playwright MCP, con moderación)
+- Úsalo al terminar una pantalla o flujo, no tras cada cambio. Prefiere el snapshot de accesibilidad a las capturas.
+- Para flujos estables, escribe tests con `@playwright/test` en vez de repetir verificación manual.
+
+## Salida
+Entrega la clase y su plantilla con la guía 2025 (`login.ts` y `login.html`: imports standalone, Signals, Tailwind, `@if`/`@for`). Si usas Motion, indica brevemente qué animación replica y de qué referencia.

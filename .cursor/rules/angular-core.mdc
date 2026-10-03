@@ -1,0 +1,16 @@
+---
+description: Convenciones base Angular + Tailwind + Signals
+alwaysApply: true
+---
+
+# Angular: convenciones base
+
+- Angular 22.2: componentes standalone por defecto (no declares `standalone`), `ChangeDetectionStrategy.OnPush`, control flow `@if/@for/@switch` (con `track`). Sin NgModules ni `@angular/animations`. Zoneless es el default desde v21: no agregues `provideZoneChangeDetection`.
+- Zoneless: todo estado que afecte la vista es un signal; no mutes propiedades planas desde callbacks (timers, Motion, listeners).
+- Estado de UI con Signals: `signal`, `computed`, `effect`, `input()`, `output()`, `model()`, `viewChild()`. RxJS solo para flujos asíncronos complejos.
+- Formularios con Reactive Forms. No uses Signal Forms salvo petición. En zoneless, `setValue` / `patchValue` no refrescan la vista: refleja ese estado en un signal o llama `ChangeDetectorRef.markForCheck()`.
+- Tailwind v4 (CSS-first): tokens en `@theme` del CSS global, sin `tailwind.config.js` salvo necesidad. Evita CSS por componente; si necesitas `@apply`, agrega `@reference` al archivo.
+- Plantilla en un `.html` aparte, junto a la clase (guía 2025: `login.ts` y `login.html`, sin sufijo `.component`). Estilos solo con utilidades de Tailwind (usa la versión del proyecto; no mezcles sintaxis v3 y v4).
+- Antes de usar una API de Angular, CDK, Motion o Tailwind, consulta Context7 (`use context7`) en vez de confiar en memoria; si algo falla por API inexistente, vuelve a consultarlo.
+- Accesibilidad: todo elemento interactivo con `:focus-visible`, `:hover` y ARIA. Comportamiento complejo (overlays, menús, focus trap, drag & drop) con `@angular/cdk`.
+- Respeta `prefers-reduced-motion` en toda animación.
