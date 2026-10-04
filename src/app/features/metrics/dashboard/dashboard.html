@@ -1,0 +1,314 @@
+<app-shell active="dashboard">
+<main class="flex flex-col gap-6 p-4 sm:p-6">
+  <!-- Page header -->
+  <section class="rounded-lg border border-[rgba(196,198,206,0.3)] bg-white p-[17px] drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
+    <p class="font-['Space_Grotesk'] font-semibold text-[10px] leading-3 tracking-[1px] uppercase text-[#44474d]">
+      Supervisión de planta activa
+    </p>
+    <h1 class="mt-1 font-['Space_Grotesk'] font-bold text-[22px] leading-7 tracking-[-0.55px] text-[#001229]">
+      Telemetría de Seguridad Ambiental
+    </h1>
+    <p class="mt-1 font-['Inter'] text-[13px] leading-[18px] text-[#44474d]">
+      Última lectura y severidad de exposición por área industrial.
+    </p>
+  </section>
+
+  <!-- KPI cards: aggregates computed in the front over the latest reading of each area -->
+  @if (state() === 'loading') {
+    <div class="grid gap-4 md:grid-cols-3" aria-hidden="true">
+      @for (card of [1, 2, 3]; track card) {
+        <div class="h-[118px] animate-pulse rounded-lg bg-white"></div>
+      }
+    </div>
+  } @else if (state() === 'ready' && items().length > 0) {
+    <div class="grid gap-4 md:grid-cols-3">
+      <!-- CO2 average -->
+      <section class="relative overflow-hidden rounded-lg border border-[rgba(196,198,206,0.3)] bg-white px-[17px] pt-[21px] pb-[17px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+        <div class="absolute inset-x-0 top-0 h-1 bg-[#10b981]" aria-hidden="true"></div>
+        <h2 class="font-['Space_Grotesk'] font-semibold text-[11px] leading-[14px] tracking-[0.55px] uppercase text-[#44474d]">
+          Nivel ambiental de CO₂ (promedio general)
+        </h2>
+        <p class="mt-2 flex items-baseline gap-2">
+          @if (co2Average() !== null) {
+            <span class="font-['Space_Grotesk'] font-bold text-[26px] leading-[30px] tracking-[-0.78px] text-[#001229]">{{ co2Average() | number: '1.0-0' }}</span>
+            <span class="font-['Space_Grotesk'] font-medium text-[13px] leading-4 tracking-[0.26px] text-[#44474d]">PPM Prom.</span>
+          } @else {
+            <span class="text-[13px] text-[#44474d]">Sin lecturas</span>
+          }
+        </p>
+        <!-- TODO(backend): Figma shows "LÍMITE" and a progress bar. The CO₂ limit is not in the dashboard response. -->
+      </section>
+
+      <!-- Noise average -->
+      <section class="relative overflow-hidden rounded-lg border border-[rgba(196,198,206,0.3)] bg-white px-[17px] pt-[21px] pb-[17px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+        <div class="absolute inset-x-0 top-0 h-1 bg-[#10b981]" aria-hidden="true"></div>
+        <h2 class="font-['Space_Grotesk'] font-semibold text-[11px] leading-[14px] tracking-[0.55px] uppercase text-[#44474d]">
+          Presión acústica (promedio general)
+        </h2>
+        <p class="mt-2 flex items-baseline gap-2">
+          @if (noiseAverage() !== null) {
+            <span class="font-['Space_Grotesk'] font-bold text-[26px] leading-[30px] tracking-[-0.78px] text-[#001229]">{{ noiseAverage() | number: '1.1-1' }}</span>
+            <span class="font-['Space_Grotesk'] font-medium text-[13px] leading-4 tracking-[0.26px] text-[#44474d]">dB Prom.</span>
+          } @else {
+            <span class="text-[13px] text-[#44474d]">Sin lecturas</span>
+          }
+        </p>
+        <!-- TODO(backend): Figma shows "LÍMITE" and a progress bar. The noise limit is not in the dashboard response. -->
+      </section>
+
+      <!-- Presence count -->
+      <section class="relative overflow-hidden rounded-lg border border-[rgba(196,198,206,0.3)] bg-white px-[17px] pt-[21px] pb-[17px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+        <div class="absolute inset-x-0 top-0 h-1 bg-[#006398]" aria-hidden="true"></div>
+        <h2 class="font-['Space_Grotesk'] font-semibold text-[11px] leading-[14px] tracking-[0.55px] uppercase text-[#44474d]">
+          Personal en zonas críticas
+        </h2>
+        <div class="mt-2 flex items-start justify-between gap-3">
+          <p class="flex items-baseline gap-2">
+            <span class="font-['Space_Grotesk'] font-bold text-[26px] leading-[30px] tracking-[-0.78px] text-[#001229]">{{ presenceAreas().length }}</span>
+            <span class="font-['Space_Grotesk'] font-medium text-[13px] leading-4 tracking-[0.26px] text-[#44474d]">
+              {{ presenceAreas().length === 1 ? 'Zona con presencia' : 'Zonas con presencia' }}
+            </span>
+          </p>
+          @if (presenceAreas().length > 0) {
+            <span class="pt-1 text-right font-['Space_Grotesk'] font-medium text-[10px] leading-3 tracking-[0.6px] uppercase text-[#44474d]">
+              {{ presenceAreaNames() }}
+            </span>
+          }
+        </div>
+        <!-- One segment per area; filled when presence is detected. -->
+        <div class="mt-2 flex gap-1" aria-hidden="true">
+          @for (area of items(); track area.areaId) {
+            <span
+              class="h-1.5 flex-1 rounded-[12px]"
+              [class]="area.presenceState === 'Detected' ? 'bg-[#006398]' : 'bg-[#e5eeff]'"
+            ></span>
+          }
+        </div>
+      </section>
+    </div>
+  }
+
+  <!-- Area matrix -->
+  <section
+    class="flex flex-col gap-3 rounded-lg border border-[rgba(196,198,206,0.3)] bg-white p-[17px] drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
+    aria-labelledby="matrix-title"
+    [attr.aria-busy]="state() === 'loading'"
+  >
+    <div class="flex items-center gap-2">
+      <img ngSrc="assets/dashboard/matrix.svg" width="17" height="17" alt="" class="size-[16.5px]" />
+      <h2 id="matrix-title" class="font-['Space_Grotesk'] font-bold text-[15px] leading-5 text-[#001229]">
+        Matriz Ambiental de Zonas
+      </h2>
+    </div>
+
+    @switch (state()) {
+      @case ('loading') {
+        <div role="status" class="flex flex-col gap-2">
+          <span class="sr-only">Cargando métricas de la planta…</span>
+          @for (row of [1, 2, 3, 4]; track row) {
+            <div class="h-14 animate-pulse rounded bg-[#eff4ff]" aria-hidden="true"></div>
+          }
+        </div>
+      }
+      @case ('error') {
+        <div role="alert" class="flex flex-col items-start gap-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-3">
+          <p class="text-[13px] text-red-700">No se pudieron cargar las métricas. Inténtalo de nuevo.</p>
+          <button
+            type="button"
+            (click)="load()"
+            class="rounded-[10px] bg-[#001229] px-4 py-2 font-['Space_Grotesk'] font-semibold text-[13px] text-white
+                   hover:bg-[#0b2644] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006398]"
+          >
+            Reintentar
+          </button>
+        </div>
+      }
+      @case ('ready') {
+        @if (items().length === 0) {
+          <p role="status" class="rounded-[10px] bg-[#eff4ff] px-4 py-6 text-center text-[13px] text-[#44474d]">
+            No hay áreas con métricas para mostrar.
+          </p>
+        } @else {
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[640px] border-collapse text-left">
+              <thead class="bg-[#eff4ff] border-y border-[rgba(196,198,206,0.3)]">
+                <tr class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.5px] uppercase text-[#44474d]">
+                  <th scope="col" class="px-3 py-4">Zona</th>
+                  <th scope="col" class="px-3 py-4">Lectura de CO₂</th>
+                  <th scope="col" class="px-3 py-4">Nivel de ruido</th>
+                  <th scope="col" class="px-3 py-4">Presencia</th>
+                  <th scope="col" class="px-3 py-4 text-right">Alarma / Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (area of items(); track area.areaId) {
+                  <tr
+                    class="border-t border-[#e5eeff] first:border-t-0"
+                    [class]="area.highlighted ? 'bg-[rgba(255,251,235,0.4)]' : ''"
+                  >
+                    <!-- Zone -->
+                    <th scope="row" class="px-3 py-3 font-normal">
+                      <span class="flex items-center gap-1.5">
+                        <a
+                          [routerLink]="['/metrics', area.areaId, 'history']"
+                          class="font-['Space_Grotesk'] text-[15px] leading-5 hover:underline rounded-sm
+                                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006398]"
+                          [class]="area.highlighted ? 'font-bold text-[#451a03]' : 'font-semibold text-[#0b1c30]'"
+                        >{{ area.name }}</a>
+                        @if (area.highlighted) {
+                          <img ngSrc="assets/dashboard/risk-warning.svg" width="15" height="13" alt="Área destacada por riesgo" class="w-[14.667px] h-[12.667px]" />
+                        }
+                      </span>
+                      <!-- Figma: zone description. Not in the contract. -->
+                    </th>
+
+                    <!-- CO2 -->
+                    <td class="px-3 py-3">
+                      @if (area.co2Ppm !== null) {
+                        <span class="flex items-baseline gap-2">
+                          <span class="font-['Space_Grotesk'] font-bold text-[18px] leading-[22px] tracking-[-0.36px] text-[#001229]">{{ area.co2Ppm | number: '1.0-0' }}</span>
+                          <span class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">PPM</span>
+                        </span>
+                      } @else {
+                        <span class="text-[12px] text-[#44474d]">Sin lectura</span>
+                      }
+                      <!-- Figma: progress bar against the limit. The CO₂ limit is not in this response. -->
+                    </td>
+
+                    <!-- Noise -->
+                    <td class="px-3 py-3">
+                      @if (area.noiseDb !== null) {
+                        <span class="flex items-baseline gap-2">
+                          <span class="font-['Space_Grotesk'] font-bold text-[18px] leading-[22px] tracking-[-0.36px] text-[#001229]">{{ area.noiseDb | number: '1.1-1' }}</span>
+                          <span class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">dB</span>
+                        </span>
+                      } @else {
+                        <span class="text-[12px] text-[#44474d]">Sin lectura</span>
+                      }
+                    </td>
+
+                    <!-- Presence -->
+                    <td class="px-3 py-3">
+                      @switch (area.presenceState) {
+                        @case ('Detected') {
+                          <span class="flex items-center gap-1.5 font-['Space_Grotesk'] font-semibold text-[10px] leading-3 tracking-[0.6px] text-[#92400e]">
+                            <img ngSrc="assets/dashboard/presence-detected.svg" width="13" height="13" alt="" class="size-[12.5px]" />
+                            Presencia detectada
+                          </span>
+                        }
+                        @case ('Cleared') {
+                          <span class="flex items-center gap-1.5 font-['Space_Grotesk'] font-semibold text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">
+                            <img ngSrc="assets/dashboard/presence-cleared.svg" width="13" height="13" alt="" class="size-[13.328px]" />
+                            Sin presencia
+                          </span>
+                        }
+                        @default {
+                          <span class="text-[12px] text-[#44474d]">Sin lectura</span>
+                        }
+                      }
+                    </td>
+
+                    <!-- Severity / alert -->
+                    <td class="px-3 py-3">
+                      <div class="flex flex-col items-end gap-1">
+                        @if (severityBadge(area.severity); as badge) {
+                          <span
+                            class="inline-flex items-center gap-1 rounded-[2px] border px-[11px] py-[3px] font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] uppercase whitespace-nowrap"
+                            [class]="badge.classes"
+                          >
+                            <span class="size-1.5 rounded-full" [class]="badge.dot" aria-hidden="true"></span>
+                            {{ badge.label }}
+                          </span>
+                        } @else {
+                          <span class="text-[12px] text-[#44474d]">Sin dato</span>
+                        }
+                        @if (area.alertActive) {
+                          <span class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] uppercase text-[#ba1a1a]">
+                            Alerta activa
+                          </span>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
+    }
+  </section>
+  <!-- Automated safety response: static explanatory content, no backend data -->
+  <section
+    class="flex flex-col gap-3 rounded-lg border border-[rgba(196,198,206,0.3)] bg-white p-[17px] drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
+    aria-labelledby="rules-title"
+  >
+    <div class="flex items-center gap-2">
+      <img ngSrc="assets/dashboard/rules.svg" width="18" height="17" alt="" class="w-[18.333px] h-[16.5px]" />
+      <h2 id="rules-title" class="font-['Space_Grotesk'] font-bold text-[15px] leading-5 text-[#001229]">
+        Respuesta Automatizada de Seguridad y Lógica Causa-Efecto
+      </h2>
+    </div>
+    <p class="font-['Inter'] text-[12px] leading-4 text-[#44474d]">
+      Las mamparas se activan únicamente cuando no hay personal adentro: se da aviso para evacuar y, una vez
+      confirmada la desocupación total, se cierran automáticamente.
+    </p>
+
+    <ul class="flex flex-col gap-3">
+      @for (rule of rules; track rule.code) {
+        <li class="overflow-hidden rounded-lg border border-[rgba(196,198,206,0.3)] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+          <div class="flex items-center gap-2 border-b border-[rgba(196,198,206,0.3)] bg-[#eff4ff] px-3 py-1.5">
+            <span class="rounded-[2px] bg-[#001229] px-1.5 py-0.5 font-['Space_Grotesk'] font-bold text-[10px] leading-[18px] uppercase text-white whitespace-nowrap">
+              {{ rule.code }}
+            </span>
+            <h3 class="font-['Space_Grotesk'] font-bold text-[11px] leading-[14px] tracking-[0.55px] text-[#001229]">{{ rule.title }}</h3>
+            <!-- Figma: "ARMADA Y ACTIVA" badge. Rule state is not exposed by the backend. -->
+          </div>
+
+          <div class="grid items-center gap-2 bg-[rgba(239,244,255,0.4)] p-3 sm:grid-cols-12">
+            <!-- Cause -->
+            <div class="flex flex-col gap-1 rounded-[4px] border border-[rgba(253,230,138,0.8)] bg-white p-[9px] drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sm:col-span-5">
+              <span class="flex items-center gap-1 font-['Space_Grotesk'] font-bold text-[10px] leading-[18px] tracking-[0.5px] uppercase text-[#92400e]">
+                @if (rule.causeIcon === 'gas') {
+                  <img ngSrc="assets/dashboard/cause-gas.svg" width="11" height="8" alt="" class="w-[10.833px] h-[7.665px]" />
+                } @else {
+                  <img ngSrc="assets/dashboard/cause-noise.svg" width="10" height="9" alt="" class="w-[9.75px] h-[9.479px]" />
+                }
+                Causa (disparador)
+              </span>
+              <p class="font-['Space_Grotesk'] font-bold text-[13px] leading-[18px] text-[#001229]">{{ rule.cause }}</p>
+            </div>
+
+            <!-- Connector -->
+            <div class="flex justify-center sm:col-span-2">
+              <span class="flex items-center gap-1 rounded-[2px] bg-[#cce5ff] px-2 py-1 drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)] font-['Space_Grotesk'] font-bold text-[10px] leading-[18px] text-[#001d31]">
+                DISPARA
+                <img ngSrc="assets/dashboard/trigger-arrow.svg" width="9" height="9" alt="" class="size-[9.333px] rotate-90 sm:rotate-0" />
+              </span>
+            </div>
+
+            <!-- Effect -->
+            <div class="flex flex-col gap-1.5 rounded-[4px] border border-[rgba(196,198,206,0.3)] bg-white p-[9px] drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sm:col-span-5">
+              <div class="flex items-start justify-between gap-2">
+                <span class="flex items-center gap-1 font-['Space_Grotesk'] font-bold text-[10px] leading-[18px] tracking-[0.5px] uppercase text-[#006398]">
+                  <img ngSrc="assets/dashboard/autonomous-action.svg" width="9" height="11" alt="" class="w-[8.667px] h-[10.833px]" />
+                  Acción autónoma (PLC)
+                </span>
+                <span class="font-['Space_Grotesk'] font-bold text-[10px] leading-[18px] text-[#047857] whitespace-nowrap">{{ rule.relay }}</span>
+              </div>
+              <ol class="flex flex-col gap-1">
+                @for (action of rule.actions; track $index) {
+                  <li class="flex items-start gap-1.5">
+                    <span class="mt-px flex h-4 min-w-4 items-center justify-center rounded-[12px] bg-[#cce5ff] px-1 font-['Inter'] font-bold text-[10px] text-[#006398]" aria-hidden="true">{{ $index + 1 }}</span>
+                    <span class="font-['Inter'] font-semibold text-[12px] leading-[18px] text-[#0b1c30]">{{ action }}</span>
+                  </li>
+                }
+              </ol>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  </section>
+</main>
+</app-shell>

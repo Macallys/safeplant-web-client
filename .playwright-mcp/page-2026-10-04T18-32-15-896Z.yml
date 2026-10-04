@@ -1,0 +1,30 @@
+- generic [ref=f3e3]:
+  - banner [ref=f3e5]:
+    - generic [ref=f3e6]: SAFEPLANT
+  - main [ref=f3e9]:
+    - generic [ref=f3e12]:
+      - generic [ref=f3e13]:
+        - img "Planta industrial SafePlant" [ref=f3e14]
+        - paragraph [ref=f3e17]: Supervisión continua y control preventivo para instalaciones críticas.
+      - generic [ref=f3e18]:
+        - generic [ref=f3e19]:
+          - generic [ref=f3e20]: SAFEPLANT
+          - generic [ref=f3e21]:
+            - heading "Iniciar Sesión" [level=1] [ref=f3e22]
+            - paragraph [ref=f3e23]: Accede a la plataforma de monitoreo y seguridad operativa
+          - generic [ref=f3e24]:
+            - generic [ref=f3e25]:
+              - generic [ref=f3e26]: Correo electrónico corporativo
+              - textbox "Correo electrónico corporativo" [ref=f3e28]:
+                - /placeholder: nombre@empresa.com
+                - text: test@empresa.com
+            - generic [ref=f3e29]:
+              - generic [ref=f3e30]: Contraseña
+              - generic [ref=f3e31]:
+                - textbox "Contraseña" [ref=f3e32]:
+                  - /placeholder: ••••••••
+                  - text: secret123
+                - button "Mostrar contraseña" [ref=f3e33]
+            - button "Ingresando…" [disabled] [ref=f3e35]
+        - link "Activar cuenta por invitación" [ref=f3e41] [cursor=pointer]:
+          - /url: /signUp

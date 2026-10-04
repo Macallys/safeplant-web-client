@@ -1,0 +1,42 @@
+- generic [ref=f15e4]:
+  - complementary "Navegación principal" [ref=f15e5]:
+    - generic [ref=f15e6]: SAFEPLANT
+    - navigation [ref=f15e9]:
+      - link "Panel de Control" [ref=f15e10] [cursor=pointer]:
+        - /url: /metrics
+      - link "Alertas" [ref=f15e13] [cursor=pointer]:
+        - /url: /alerts
+  - generic [ref=f15e16]:
+    - banner [ref=f15e17]:
+      - navigation "Ruta de navegación" [ref=f15e18]:
+        - list [ref=f15e19]:
+          - listitem [ref=f15e20]:
+            - generic [ref=f15e21]: SAFEPLANT
+          - listitem [ref=f15e22]:
+            - generic [ref=f15e23]: Vista de Consola
+      - generic [ref=f15e24]: encargado@safeplant.com
+    - main [ref=f15e26]:
+      - generic [ref=f15e27]:
+        - paragraph [ref=f15e28]:
+          - generic [ref=f15e29]: Operaciones de telemetría
+          - generic [ref=f15e30]: Gestión de incidentes
+        - heading "Registro de Alertas y Eventos de Seguridad" [level=1] [ref=f15e31]
+        - paragraph [ref=f15e32]: Alertas ambientales, acciones automáticas y lecturas del área en el periodo seleccionado.
+      - group "Filtros" [ref=f15e33]:
+        - generic [ref=f15e34]:
+          - generic [ref=f15e35]: "Zona:"
+          - combobox "Zona:" [ref=f15e37]:
+            - option "Zona A"
+            - option "Zona B"
+            - option "Zona C"
+            - option "Zona D"
+            - option "Zona E" [selected]
+        - generic [ref=f15e38]:
+          - generic [ref=f15e39]: "Periodo:"
+          - group "Periodo:" [ref=f15e40]:
+            - button "Últimas 1h" [ref=f15e41]
+            - button "Últimas 6h" [ref=f15e42]
+            - button "Últimas 12h" [ref=f15e43]
+            - button "Últimas 24h" [pressed] [ref=f15e44]
+        - button "Actualizar" [ref=f15e45]
+      - status [ref=f15e222]: No hay eventos en el periodo para Zona E.

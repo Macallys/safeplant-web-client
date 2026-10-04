@@ -1,0 +1,17 @@
+[     466ms] [LOG] Angular is running in development mode. @ http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:12478
+[  100578ms] [LOG] Angular is running in development mode. @ http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:12478
+[  268787ms] [LOG] Angular is running in development mode. @ http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:12478
+[  269944ms] [LOG] Angular is running in development mode. @ http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:12478
+[  270009ms] [ERROR] ERROR TypeError: ctx.store.error is not a function
+    at SignIn_Template (http://localhost:4300/chunk-X76JRBEG.js:346:45)
+    at executeTemplate (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:7495:3)
+    at refreshView (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:8043:28)
+    at detectChangesInView (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:8173:25)
+    at detectChangesInViewIfAttached (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:8159:2)
+    at detectChangesInComponent (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:8152:3)
+    at detectChangesInChildComponents (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:8188:46)
+    at refreshView (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:8071:28)
+    at detectChangesInView (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:8173:25)
+    at detectChangesInViewIfAttached (http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:8159:2) @ http://localhost:4300/@vite/client:298
+[  277720ms] [LOG] Angular is running in development mode. @ http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:12478
+[  287559ms] [LOG] Angular is running in development mode. @ http://localhost:4300/@fs/C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/.angular/cache/22.2.1/safeplant-web-client/vite/deps/core-CABa1ZRZ.js?v=74581312:12478

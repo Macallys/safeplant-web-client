@@ -1,0 +1,183 @@
+- generic [ref=f14e4]:
+  - complementary "Navegación principal" [ref=f14e5]:
+    - generic [ref=f14e6]: SAFEPLANT
+    - navigation [ref=f14e9]:
+      - link "Panel de Control" [ref=f14e10] [cursor=pointer]:
+        - /url: /metrics
+      - link "Alertas" [ref=f14e13] [cursor=pointer]:
+        - /url: /alerts
+  - generic [ref=f14e16]:
+    - banner [ref=f14e17]:
+      - navigation "Ruta de navegación" [ref=f14e18]:
+        - list [ref=f14e19]:
+          - listitem [ref=f14e20]:
+            - generic [ref=f14e21]: SAFEPLANT
+          - listitem [ref=f14e22]:
+            - generic [ref=f14e23]: Vista de Consola
+      - generic [ref=f14e24]: encargado@safeplant.com
+    - main [ref=f14e26]:
+      - generic [ref=f14e27]:
+        - paragraph [ref=f14e28]:
+          - generic [ref=f14e29]: Operaciones de telemetría
+          - generic [ref=f14e30]: Gestión de incidentes
+        - heading "Registro de Alertas y Eventos de Seguridad" [level=1] [ref=f14e31]
+        - paragraph [ref=f14e32]: Alertas ambientales, acciones automáticas y lecturas del área en el periodo seleccionado.
+      - group "Filtros" [ref=f14e33]:
+        - generic [ref=f14e34]:
+          - generic [ref=f14e35]: "Zona:"
+          - combobox "Zona:" [ref=f14e37]:
+            - option "Zona A" [selected]
+            - option "Zona B"
+            - option "Zona C"
+            - option "Zona D"
+            - option "Zona E"
+        - generic [ref=f14e38]:
+          - generic [ref=f14e39]: "Periodo:"
+          - group "Periodo:" [ref=f14e40]:
+            - button "Últimas 1h" [ref=f14e41]
+            - button "Últimas 6h" [ref=f14e42]
+            - button "Últimas 12h" [ref=f14e43]
+            - button "Últimas 24h" [pressed] [ref=f14e44]
+        - button "Actualizar" [ref=f14e45]
+      - generic [ref=f14e46]:
+        - generic [ref=f14e47]:
+          - generic [ref=f14e48]:
+            - heading "Alertas activas" [level=2] [ref=f14e49]
+            - paragraph [ref=f14e50]:
+              - generic [ref=f14e51]: "0"
+              - generic [ref=f14e52]: Sin retirar
+          - generic [ref=f14e54]:
+            - heading "Resueltas en el periodo" [level=2] [ref=f14e55]
+            - paragraph [ref=f14e56]:
+              - generic [ref=f14e57]: "3"
+              - generic [ref=f14e58]: Alertas retiradas
+          - generic [ref=f14e59]:
+            - heading "Tiempo medio de resolución" [level=2] [ref=f14e60]
+            - paragraph [ref=f14e61]:
+              - generic [ref=f14e62]: "51"
+              - generic [ref=f14e63]: minutos
+          - generic [ref=f14e64]:
+            - heading "Acciones automáticas" [level=2] [ref=f14e65]
+            - paragraph [ref=f14e66]:
+              - generic [ref=f14e67]: 3/3
+              - generic [ref=f14e68]: Exitosas
+        - region [ref=f14e69]:
+          - generic [ref=f14e70]:
+            - heading "Flujo de Auditoría de Incidentes" [level=2] [ref=f14e71]
+            - generic [ref=f14e72]: 3 registradas
+          - table [ref=f14e74]:
+            - rowgroup [ref=f14e75]:
+              - row [ref=f14e76]:
+                - columnheader "Código de alerta" [ref=f14e77]
+                - columnheader "Levantada (UTC)" [ref=f14e78]
+                - columnheader "Retirada (UTC)" [ref=f14e79]
+                - columnheader "Duración" [ref=f14e80]
+                - columnheader "Estado" [ref=f14e81]
+            - rowgroup [ref=f14e82]:
+              - row [ref=f14e83]:
+                - rowheader "ALR-4186" [ref=f14e84]
+                - cell [ref=f14e85]:
+                  - paragraph [ref=f14e86]: 13:43:38
+                  - paragraph [ref=f14e87]: 04/10/2026
+                - cell [ref=f14e88]:
+                  - paragraph [ref=f14e89]: 14:14:16
+                  - paragraph [ref=f14e90]: 04/10/2026
+                - cell "31 min" [ref=f14e91]
+                - cell "Retirada" [ref=f14e92]
+              - row [ref=f14e94]:
+                - rowheader "ALR-4241" [ref=f14e95]
+                - cell [ref=f14e96]:
+                  - paragraph [ref=f14e97]: 02:29:35
+                  - paragraph [ref=f14e98]: 04/10/2026
+                - cell [ref=f14e99]:
+                  - paragraph [ref=f14e100]: 03:00:13
+                  - paragraph [ref=f14e101]: 04/10/2026
+                - cell "31 min" [ref=f14e102]
+                - cell "Retirada" [ref=f14e103]
+              - row [ref=f14e105]:
+                - rowheader "ALR-4065" [ref=f14e106]
+                - cell [ref=f14e107]:
+                  - paragraph [ref=f14e108]: 20:21:56
+                  - paragraph [ref=f14e109]: 03/10/2026
+                - cell [ref=f14e110]:
+                  - paragraph [ref=f14e111]: 21:53:50
+                  - paragraph [ref=f14e112]: 03/10/2026
+                - cell "1 h 32 min" [ref=f14e113]
+                - cell "Retirada" [ref=f14e114]
+          - navigation "Paginación de alertas" [ref=f14e116]:
+            - paragraph [ref=f14e117]: Mostrando 1–3 de 3 alertas registradas en las últimas 24h
+            - generic [ref=f14e118]:
+              - button "Anterior" [disabled] [ref=f14e119]
+              - button "Página 1" [ref=f14e120]: "1"
+              - button "Siguiente" [disabled] [ref=f14e121]
+        - region [ref=f14e122]:
+          - generic [ref=f14e123]:
+            - generic [ref=f14e124]:
+              - heading "Historial de Telemetría y Variación Temporal" [level=2] [ref=f14e125]
+              - generic [ref=f14e126]: 3 canales
+            - paragraph [ref=f14e127]: Curvas de CO₂, ruido y presencia de Zona A en las últimas 24h.
+          - generic [ref=f14e128]:
+            - generic [ref=f14e129]:
+              - generic [ref=f14e130]:
+                - generic [ref=f14e131]:
+                  - heading "Variación de CO₂" [level=3] [ref=f14e132]
+                  - paragraph [ref=f14e133]: "Eje Y: PPM · Eje X: hora UTC"
+                - generic [ref=f14e134]: 402 PPMActual
+              - generic [ref=f14e135]:
+                - group "Variación de CO₂ en PPM. Usa las flechas para recorrer las lecturas." [ref=f14e136]:
+                  - img [aria-hidden] [ref=f14e137]:
+                    - generic [ref=f14e138]: "200"
+                    - generic [ref=f14e139]: "300"
+                    - generic [ref=f14e140]: "400"
+                    - generic [ref=f14e141]: "500"
+                    - generic [ref=f14e142]: "600"
+                    - generic [ref=f14e143]: 18:50
+                    - generic [ref=f14e144]: 00:50
+                    - generic [ref=f14e145]: 06:50
+                    - generic [ref=f14e146]: 12:50
+                    - generic [ref=f14e147]: 18:50
+                    - generic [ref=f14e151]: Pico 553 PPM
+                - group [ref=f14e152]:
+                  - generic "Ver datos" [ref=f14e153] [cursor=pointer]
+              - paragraph [ref=f14e154]: "Promedio 24h: 363 PPM"
+            - generic [ref=f14e155]:
+              - generic [ref=f14e156]:
+                - generic [ref=f14e157]:
+                  - heading "Presión Acústica (dB)" [level=3] [ref=f14e158]
+                  - paragraph [ref=f14e159]: "Eje Y: decibeles · Eje X: hora UTC"
+                - generic [ref=f14e160]: 67 dBActual
+              - generic [ref=f14e161]:
+                - group "Presión acústica en decibeles. Usa las flechas para recorrer las lecturas." [ref=f14e162]:
+                  - img [aria-hidden] [ref=f14e163]:
+                    - generic [ref=f14e164]: "60"
+                    - generic [ref=f14e165]: "65"
+                    - generic [ref=f14e166]: "70"
+                    - generic [ref=f14e167]: "75"
+                    - generic [ref=f14e168]: "80"
+                    - generic [ref=f14e169]: 18:50
+                    - generic [ref=f14e170]: 00:50
+                    - generic [ref=f14e171]: 06:50
+                    - generic [ref=f14e172]: 12:50
+                    - generic [ref=f14e173]: 18:50
+                    - generic [ref=f14e177]: Pico 78.5 dB
+                - group [ref=f14e178]:
+                  - generic "Ver datos" [ref=f14e179] [cursor=pointer]
+              - paragraph [ref=f14e180]: "Promedio 24h: 69.1 dB"
+            - generic [ref=f14e181]:
+              - generic [ref=f14e182]:
+                - generic [ref=f14e183]:
+                  - heading "Presencia en la Zona" [level=3] [ref=f14e184]
+                  - paragraph [ref=f14e185]: "Eje Y: estado · Eje X: hora UTC"
+                - generic [ref=f14e186]: 4 deteccionesen el periodo
+              - generic [ref=f14e187]:
+                - group "Cambios de presencia detectada. Usa las flechas para recorrer las lecturas." [ref=f14e188]:
+                  - img [aria-hidden] [ref=f14e189]:
+                    - generic [ref=f14e190]: "No"
+                    - generic [ref=f14e191]: Sí
+                    - generic [ref=f14e192]: 18:50
+                    - generic [ref=f14e193]: 00:50
+                    - generic [ref=f14e194]: 06:50
+                    - generic [ref=f14e195]: 12:50
+                    - generic [ref=f14e196]: 18:50
+                - group [ref=f14e199]:
+                  - generic "Ver datos" [ref=f14e200] [cursor=pointer]

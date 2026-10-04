@@ -1,0 +1,94 @@
+<!-- Aside -->
+<aside
+  class="hidden lg:flex fixed inset-y-0 left-0 w-64 flex-col bg-[#0f2744] drop-shadow-[1px_0px_2px_rgba(0,18,41,0.12)] z-10"
+  aria-label="Navegación principal"
+>
+  <div class="flex h-16 items-center gap-2 px-4 bg-[#001229] border-b border-[rgba(116,119,126,0.2)]">
+    <div class="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[8.6px] bg-[#0f2744]">
+      <img ngSrc="assets/logo.svg" width="55" height="55" alt="" priority />
+    </div>
+    <span class="font-['Space_Grotesk'] font-bold text-[15px] leading-5 tracking-[0.75px] text-white">SAFEPLANT</span>
+    <!-- Figma: plant name, system status and active node count. Not in the contract. -->
+  </div>
+
+  <nav class="flex flex-col gap-1 p-2">
+    <a
+      routerLink="/metrics"
+      [attr.aria-current]="active() === 'dashboard' ? 'page' : null"
+      class="flex items-center justify-between rounded-[2px] px-3 py-2 text-[#f8f9ff]
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      [class]="active() === 'dashboard' ? 'bg-[#006398] text-white' : 'hover:bg-[rgba(0,99,152,0.4)]'"
+    >
+      <span class="flex items-center gap-2">
+        <img ngSrc="assets/dashboard/nav-dashboard.svg" width="14" height="14" alt="" class="size-[13.5px]" />
+        <span class="font-['Space_Grotesk'] font-semibold text-[13px] leading-4 tracking-[0.26px]">Panel de Control</span>
+      </span>
+      @if (active() === 'dashboard') {
+        <img ngSrc="assets/dashboard/nav-chevron-active.svg" width="4" height="7" alt="" class="w-[4.317px] h-[7px]" />
+      } @else {
+        <img ngSrc="assets/dashboard/nav-chevron.svg" width="4" height="7" alt="" class="w-[4.317px] h-[7px]" />
+      }
+    </a>
+    <a
+      routerLink="/alerts"
+      [attr.aria-current]="active() === 'alerts' ? 'page' : null"
+      class="flex items-center justify-between rounded-[2px] px-3 py-2 text-[#f8f9ff]
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      [class]="active() === 'alerts' ? 'bg-[#006398] text-white' : 'hover:bg-[rgba(0,99,152,0.4)]'"
+    >
+      <span class="flex items-center gap-2">
+        @if (active() === 'alerts') {
+          <img ngSrc="assets/dashboard/nav-alerts-active.svg" width="22" height="19" alt="" />
+        } @else {
+          <img ngSrc="assets/dashboard/nav-alerts.svg" width="17" height="14" alt="" class="w-[16.5px] h-[14.25px]" />
+        }
+        <span class="font-['Space_Grotesk'] font-semibold text-[13px] leading-4 tracking-[0.26px]">Alertas</span>
+      </span>
+      <!-- Figma: red counter badge. The count depends on the selected area and period; it lives on the page. -->
+      @if (active() === 'alerts') {
+        <img ngSrc="assets/dashboard/nav-chevron-active.svg" width="4" height="7" alt="" class="w-[4.317px] h-[7px]" />
+      } @else {
+        <img ngSrc="assets/dashboard/nav-chevron.svg" width="4" height="7" alt="" class="w-[4.317px] h-[7px]" />
+      }
+    </a>
+    <!-- Figma: Umbrales and Dispositivos are mobile/Supervisor operations (403 on web). -->
+  </nav>
+</aside>
+
+<div class="lg:pl-64">
+  <!-- Header -->
+  <header
+    class="sticky top-0 z-[5] flex h-16 items-center justify-between bg-white px-4 sm:px-6 border-b border-[rgba(196,198,206,0.4)] drop-shadow-[0px_1px_1.5px_rgba(15,39,68,0.05)]"
+  >
+    <nav aria-label="Ruta de navegación">
+      <ol class="flex items-center gap-1.5">
+        <li class="flex items-center gap-1">
+          <img ngSrc="assets/dashboard/breadcrumb-shield.svg" width="11" height="13" alt="" class="w-[10.667px] h-[13.333px]" />
+          <span class="font-['Space_Grotesk'] font-bold text-[11px] leading-[14px] tracking-[0.55px] text-[#0b1c30]">SAFEPLANT</span>
+        </li>
+        <li class="flex items-center gap-1.5" aria-current="page">
+          <img ngSrc="assets/dashboard/breadcrumb-chevron.svg" width="4" height="7" alt="" class="w-[4.317px] h-[7px]" />
+          <span class="font-['Space_Grotesk'] font-semibold text-[11px] leading-[14px] tracking-[0.55px] text-[#44474d]">Vista de Consola</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- The contract has no user name or job title: show the sign-in email.
+         TODO(backend): CloseSession path is "To discuss" — add the logout action when closed. -->
+    @if (email(); as userEmail) {
+      <div class="flex items-center gap-2.5">
+        <img
+          ngSrc="assets/avatar-default.jpg"
+          width="32"
+          height="32"
+          alt=""
+          class="size-8 rounded-[12px] object-cover shadow-[0px_0px_0px_1px_rgba(196,198,206,0.4),0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+        />
+        <span class="max-w-[40vw] truncate font-['Space_Grotesk'] font-bold text-[11px] leading-[14px] tracking-[0.55px] text-[#0b1c30]">
+          {{ userEmail }}
+        </span>
+      </div>
+    }
+  </header>
+
+  <ng-content />
+</div>

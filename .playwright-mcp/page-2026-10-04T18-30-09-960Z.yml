@@ -1,0 +1,33 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]: SAFEPLANT
+    - main [ref=e9]:
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - img "Planta industrial SafePlant" [ref=e14]
+          - paragraph [ref=e17]: Supervisión continua y control preventivo para instalaciones críticas.
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - generic [ref=e20]: SAFEPLANT
+            - generic [ref=e21]:
+              - heading "Iniciar Sesión" [level=1] [ref=e22]
+              - paragraph [ref=e23]: Accede a la plataforma de monitoreo y seguridad operativa
+            - generic [ref=e24]:
+              - generic [ref=e25]:
+                - generic [ref=e26]: Correo electrónico corporativo
+                - textbox "Correo electrónico corporativo" [ref=e28]:
+                  - /placeholder: nombre@empresa.com
+              - generic [ref=e29]:
+                - generic [ref=e30]: Contraseña
+                - generic [ref=e31]:
+                  - textbox "Contraseña" [ref=e32]:
+                    - /placeholder: ••••••••
+                  - button "Mostrar contraseña" [ref=e33]
+              - button "Ingresar al Sistema" [ref=e35]
+          - link "Activar cuenta por invitación" [ref=e38] [cursor=pointer]:
+            - /url: /signUp
+  - generic [ref=e41]:
+    - generic [ref=e42]: "NG2008: Could not find template file './dashboard.html'."
+    - generic [ref=e43]: C:/Users/gabri/OneDrive/Desktop/IoT/safeplant-web-client/src/app/features/metrics/dashboard/dashboard.ts:36:15
+    - generic [ref=e45]: Click outside, press Esc key, or fix the code to dismiss.

@@ -1,0 +1,372 @@
+<app-shell active="alerts">
+  <main class="flex flex-col gap-4 p-4">
+    <!-- Headline -->
+    <div class="flex flex-col gap-0.5">
+      <p class="flex items-center gap-1 font-['Space_Grotesk'] text-[10px] leading-3 tracking-[0.5px] uppercase">
+        <span class="font-bold text-[#44474d]">Operaciones de telemetría</span>
+        <img ngSrc="assets/dashboard/headline-chevron.svg" width="7" height="12" alt="" class="w-[7.4px] h-3" />
+        <span class="font-semibold text-[#006398]">Gestión de incidentes</span>
+      </p>
+      <h1 class="pt-0.5 font-['Space_Grotesk'] font-semibold text-[22px] leading-7 tracking-[-0.55px] text-[#001229]">
+        Registro de Alertas y Eventos de Seguridad
+      </h1>
+      <p class="font-['Inter'] text-[12px] leading-4 text-[#44474d]">
+        Alertas ambientales, acciones automáticas y lecturas del área en el periodo seleccionado.
+      </p>
+      <!-- Figma: "Configurar Disparadores de Alerta" button. Thresholds are mobile-only (403 on web). -->
+    </div>
+
+    <!-- Filters: one row, scope everything below -->
+    <div
+      class="flex flex-wrap items-center gap-3 rounded-[2px] border border-[rgba(196,198,206,0.4)] bg-white p-[13px] drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
+      role="group"
+      aria-label="Filtros"
+    >
+      <label class="flex items-center gap-1.5 rounded-[2px] border border-[rgba(196,198,206,0.3)] bg-[#eff4ff] px-[13px] py-[7px]">
+        <img ngSrc="assets/dashboard/filter-zone.svg" width="16" height="20" alt="" />
+        <span class="font-['Space_Grotesk'] font-semibold text-[10px] leading-3 tracking-[0.6px] uppercase text-[#74777e]">Zona:</span>
+        <span class="relative">
+          <select
+            class="appearance-none border border-[#6b7280] bg-white py-2 pl-[13px] pr-9 font-['Space_Grotesk'] font-medium text-[11px] leading-[14px] tracking-[0.55px] text-[#0b1c30]
+                   focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#006398] disabled:opacity-60"
+            [disabled]="areaList().length === 0"
+            (change)="selectArea($any($event.target).value)"
+          >
+            @for (area of areaList(); track area.areaId) {
+              <option [value]="area.areaId" [selected]="area.areaId === selectedArea()?.areaId">{{ area.name }}</option>
+            }
+          </select>
+          <img
+            ngSrc="assets/dashboard/select-chevron.svg"
+            width="17"
+            height="17"
+            alt=""
+            class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 size-[16.5px]"
+          />
+        </span>
+        <!-- Figma: "Todas las Zonas". PlantHistory is per area; there is no plant-wide history. -->
+      </label>
+
+      <div class="flex items-center gap-2 rounded-[2px] border border-[rgba(196,198,206,0.3)] bg-[#eff4ff] py-[5px] pl-[13px] pr-[5px]">
+        <img ngSrc="assets/dashboard/filter-calendar.svg" width="18" height="20" alt="" />
+        <span id="period-label" class="font-['Space_Grotesk'] font-semibold text-[10px] leading-3 tracking-[0.6px] uppercase text-[#74777e]">Periodo:</span>
+        <div class="flex items-center rounded-[2px] p-[3px]" role="group" aria-labelledby="period-label">
+          @for (p of periods; track p) {
+            <button
+              type="button"
+              class="rounded-[2px] px-2.5 py-1 font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px]
+                     focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#006398]"
+              [class]="period() === p ? 'bg-[#006398] text-white drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)]' : 'text-[#44474d] hover:bg-white'"
+              [attr.aria-pressed]="period() === p"
+              (click)="period.set(p)"
+            >
+              Últimas {{ p }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="flex size-8 items-center justify-center rounded-[2px] border border-[rgba(196,198,206,0.3)] hover:bg-[#eff4ff]
+               focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#006398]"
+        aria-label="Actualizar"
+        (click)="reload()"
+      >
+        <img ngSrc="assets/dashboard/filter-refresh.svg" width="16" height="18" alt="" class="w-4 h-[18.45px]" />
+      </button>
+      <!-- Figma: free-text search and severity filter. Alerts only carry id and dates; severity is "To discuss". -->
+    </div>
+
+    @if (areas().status === 'error') {
+      <div role="alert" class="rounded-[2px] border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
+        No se pudieron cargar las zonas. Inténtalo de nuevo más tarde.
+      </div>
+    } @else if (areas().status === 'ready' && areaList().length === 0) {
+      <p role="status" class="rounded-[2px] bg-white px-4 py-6 text-center text-[13px] text-[#44474d]">
+        No hay zonas registradas en la planta.
+      </p>
+    } @else if (status() === 'error') {
+      <div role="alert" class="flex flex-col items-start gap-3 rounded-[2px] border border-red-200 bg-red-50 px-4 py-3">
+        <p class="text-[13px] text-red-700">No se pudo cargar el historial del área. Inténtalo de nuevo.</p>
+        <button
+          type="button"
+          (click)="reload()"
+          class="rounded-[2px] bg-[#001229] px-4 py-2 font-['Space_Grotesk'] font-semibold text-[12px] text-white
+                 hover:bg-[#0b2644] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006398]"
+        >
+          Reintentar
+        </button>
+      </div>
+    } @else if (!data()) {
+      <div role="status" class="flex flex-col gap-4">
+        <span class="sr-only">Cargando historial del área…</span>
+        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-hidden="true">
+          @for (card of [1, 2, 3, 4]; track card) {
+            <div class="h-20 animate-pulse rounded-[2px] bg-white"></div>
+          }
+        </div>
+        <div class="h-72 animate-pulse rounded-[2px] bg-white" aria-hidden="true"></div>
+      </div>
+    } @else {
+      <div
+        class="flex flex-col gap-4 transition-opacity"
+        [class.opacity-60]="status() === 'loading'"
+        [attr.aria-busy]="status() === 'loading'"
+      >
+        @if (isEmpty()) {
+          <p role="status" class="rounded-[2px] border border-[rgba(196,198,206,0.4)] bg-white px-4 py-8 text-center text-[13px] text-[#44474d]">
+            No hay eventos en el periodo para {{ selectedArea()?.name ?? 'esta zona' }}.
+          </p>
+        } @else {
+          <!-- Metric cards: computed in the front from the period response -->
+          <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <section class="relative overflow-hidden rounded-[2px] border border-[rgba(196,198,206,0.4)] bg-white p-[13px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+              <h2 class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.5px] uppercase text-[#44474d]">Alertas activas</h2>
+              <p class="flex items-baseline gap-1 pt-3 font-['Space_Grotesk'] font-bold">
+                <span class="text-[26px] leading-[30px] tracking-[-0.78px]" [class]="activeAlerts() ? 'text-[#ba1a1a]' : 'text-[#001229]'">{{ activeAlerts() }}</span>
+                <span class="text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">Sin retirar</span>
+              </p>
+            </section>
+            <section class="rounded-[2px] border border-[rgba(196,198,206,0.4)] bg-white p-[13px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+              <h2 class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.5px] uppercase text-[#44474d]">Resueltas en el periodo</h2>
+              <p class="flex items-baseline gap-1 pt-3 font-['Space_Grotesk'] font-bold">
+                <span class="text-[26px] leading-[30px] tracking-[-0.78px] text-[#001229]">{{ withdrawnAlerts().length }}</span>
+                <span class="text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">Alertas retiradas</span>
+              </p>
+            </section>
+            <section class="rounded-[2px] border border-[rgba(196,198,206,0.4)] bg-white p-[13px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+              <h2 class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.5px] uppercase text-[#44474d]">Tiempo medio de resolución</h2>
+              <p class="flex items-baseline gap-1 pt-3 font-['Space_Grotesk'] font-bold">
+                @if (meanResolutionMinutes() !== null) {
+                  <span class="text-[26px] leading-[30px] tracking-[-0.78px] text-[#006398]">{{ meanResolutionMinutes()!.toFixed(0) }}</span>
+                  <span class="text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">minutos</span>
+                } @else {
+                  <span class="text-[13px] font-medium text-[#44474d]">Sin alertas retiradas</span>
+                }
+              </p>
+            </section>
+            <section class="rounded-[2px] border border-[rgba(196,198,206,0.4)] bg-white p-[13px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+              <h2 class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.5px] uppercase text-[#44474d]">Acciones automáticas</h2>
+              <p class="flex items-baseline gap-1 pt-3 font-['Space_Grotesk'] font-bold">
+                <span class="text-[26px] leading-[30px] tracking-[-0.78px] text-[#001229]">{{ succeededActions() }}/{{ actions().length }}</span>
+                <span class="text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">Exitosas</span>
+              </p>
+            </section>
+          </div>
+
+          <!-- Alerts table -->
+          <section
+            class="overflow-hidden rounded-[2px] border border-[rgba(196,198,206,0.4)] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+            aria-labelledby="alerts-title"
+          >
+            <div class="flex items-center gap-2 border-b border-[#e5eeff] bg-[#f8f9ff] px-3 pt-3 pb-[13px]">
+              <h2 id="alerts-title" class="font-['Space_Grotesk'] font-semibold text-[15px] leading-5 text-[#001229]">
+                Flujo de Auditoría de Incidentes
+              </h2>
+              <span class="rounded-[12px] bg-[#e5eeff] px-2 py-0.5 font-['Space_Grotesk'] font-semibold text-[10px] leading-3 tracking-[0.6px] text-[#0b1c30]">
+                {{ alerts().length }} registradas
+              </span>
+              <!-- Figma: MQTT broker connection status. Not in the contract (the Edge owns MQTT). -->
+            </div>
+
+            @if (alerts().length === 0) {
+              <p role="status" class="px-4 py-6 text-center text-[13px] text-[#44474d]">No hay alertas en el periodo.</p>
+            } @else {
+              <div class="overflow-x-auto">
+                <table class="w-full min-w-[560px] border-collapse text-left">
+                  <thead class="border-b border-[#e5eeff]">
+                    <tr class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.5px] uppercase text-[#44474d]">
+                      <th scope="col" class="px-3 py-4">Código de alerta</th>
+                      <th scope="col" class="px-3 py-4">Levantada (UTC)</th>
+                      <th scope="col" class="px-3 py-4">Retirada (UTC)</th>
+                      <th scope="col" class="px-3 py-4">Duración</th>
+                      <th scope="col" class="px-3 py-4 text-center">Estado</th>
+                    </tr>
+                  </thead>
+                  <!-- Figma columns not shown: severity, hazard description and reading vs limit
+                       (TODO(backend): alertType, severity, measuredValue are "To discuss"), sensor/node
+                       (alerts carry no deviceId) and zone (the table is already scoped to one area). -->
+                  <tbody>
+                    @for (alert of pageAlerts(); track alert.id) {
+                      <tr class="border-t border-[#e5eeff] first:border-t-0" [class]="alert.withdrawnAt ? '' : 'bg-[rgba(255,218,214,0.2)]'">
+                        <th scope="row" class="px-3 py-4 font-mono text-[15px] font-bold leading-5 text-[#001229]">{{ alert.id }}</th>
+                        <td class="px-3 py-4">
+                          <p class="font-mono text-[13px] font-bold leading-4 text-[#001229]">{{ alert.raisedAt | date: 'HH:mm:ss' : 'UTC' }}</p>
+                          <p class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#74777e]">{{ alert.raisedAt | date: 'dd/MM/yyyy' : 'UTC' }}</p>
+                        </td>
+                        <td class="px-3 py-4">
+                          @if (alert.withdrawnAt) {
+                            <p class="font-mono text-[13px] font-bold leading-4 text-[#001229]">{{ alert.withdrawnAt | date: 'HH:mm:ss' : 'UTC' }}</p>
+                            <p class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#74777e]">{{ alert.withdrawnAt | date: 'dd/MM/yyyy' : 'UTC' }}</p>
+                          } @else {
+                            <span class="text-[12px] text-[#44474d]">—</span>
+                          }
+                        </td>
+                        <td class="px-3 py-4 font-['Space_Grotesk'] font-semibold text-[12px] text-[#0b1c30]">
+                          {{ alert.withdrawnAt ? duration(alert.raisedAt, alert.withdrawnAt) : 'En curso' }}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                          @if (alert.withdrawnAt) {
+                            <span class="inline-flex items-center rounded-[2px] border border-[#a7f3d0] bg-[#ecfdf5] px-[11px] py-[3px] font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#065f46]">
+                              Retirada
+                            </span>
+                          } @else {
+                            <span class="inline-flex items-center gap-1 rounded-[2px] border border-[rgba(245,158,11,0.3)] bg-[#fef3c7] px-[11px] py-[5px] font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#78350f]">
+                              <span class="size-1.5 rounded-full bg-[#d97706]" aria-hidden="true"></span>
+                              Activa
+                            </span>
+                          }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+              <nav
+                class="flex flex-wrap items-center justify-between gap-2 border-t border-[#e5eeff] bg-[#f8f9ff] px-3 pt-[13px] pb-3"
+                aria-label="Paginación de alertas"
+              >
+                <p class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">
+                  Mostrando {{ pageStart() + 1 }}–{{ pageStart() + pageAlerts().length }} de {{ alerts().length }} alertas registradas en las últimas {{ period() }}
+                </p>
+                <div class="flex items-center gap-1 font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px]">
+                  <button
+                    type="button"
+                    class="rounded-[2px] bg-[#e5eeff] px-2 py-1 text-[#0b1c30] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[#006398]"
+                    [disabled]="page() === 0"
+                    (click)="page.set(page() - 1)"
+                  >Anterior</button>
+                  @for (n of pages(); track n) {
+                    <button
+                      type="button"
+                      class="rounded-[2px] px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-[#006398]"
+                      [class]="page() === n ? 'bg-[#001229] text-white' : 'text-[#0b1c30] hover:bg-[#e5eeff]'"
+                      [attr.aria-current]="page() === n ? 'page' : null"
+                      [attr.aria-label]="'Página ' + (n + 1)"
+                      (click)="page.set(n)"
+                    >{{ n + 1 }}</button>
+                  }
+                  <button
+                    type="button"
+                    class="rounded-[2px] bg-[#e5eeff] px-2 py-1 text-[#0b1c30] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[#006398]"
+                    [disabled]="page() >= pageCount() - 1"
+                    (click)="page.set(page() + 1)"
+                  >Siguiente</button>
+                </div>
+              </nav>
+            }
+          </section>
+
+          <!-- Telemetry history -->
+          <section
+            class="flex flex-col gap-3 rounded-[2px] border border-[rgba(196,198,206,0.4)] bg-white p-[17px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+            aria-labelledby="telemetry-title"
+          >
+            <div class="flex flex-col gap-0.5 border-b border-[#e5eeff] pb-[13px]">
+              <div class="flex flex-wrap items-center gap-2">
+                <img ngSrc="assets/dashboard/history.svg" width="20" height="19" alt="" />
+                <h2 id="telemetry-title" class="font-['Space_Grotesk'] font-bold text-[18px] leading-6 tracking-[-0.09px] text-[#001229]">
+                  Historial de Telemetría y Variación Temporal
+                </h2>
+                <span class="rounded-[2px] bg-[#e5eeff] px-2 py-0.5 font-['Space_Grotesk'] font-semibold text-[10px] leading-3 tracking-[0.6px] text-[#0b1c30]">
+                  3 canales
+                </span>
+              </div>
+              <p class="font-['Inter'] text-[12px] leading-4 text-[#44474d]">
+                Curvas de CO₂, ruido y presencia de {{ selectedArea()?.name ?? 'la zona' }} en las últimas {{ period() }}.
+              </p>
+              <!-- Figma repeats zone + period controls here; the filter row above already scopes this section. -->
+            </div>
+
+            @if (window(); as w) {
+              <div class="grid gap-4 lg:grid-cols-3">
+                <!-- CO2 -->
+                <div class="flex flex-col gap-2 rounded-[2px] border border-[rgba(196,198,206,0.3)] bg-[#f8f9ff] p-[13px]">
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 class="font-['Space_Grotesk'] font-bold text-[15px] leading-5 text-[#001229]">Variación de CO₂</h3>
+                      <p class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] uppercase text-[#74777e]">Eje Y: PPM · Eje X: hora UTC</p>
+                    </div>
+                    @if (co2Latest() !== null) {
+                      <span class="rounded-[2px] bg-[#e5eeff] px-2 py-0.5 font-mono text-[10px] font-bold leading-3 tracking-[0.6px] text-[#001229] whitespace-nowrap">
+                        {{ co2Latest() }} PPM<br />Actual
+                      </span>
+                    }
+                  </div>
+                  <!-- TODO(backend): Figma draws the 800 PPM limit line. Thresholds are not in PlantHistory. -->
+                  <app-telemetry-chart
+                    label="Variación de CO₂ en PPM"
+                    [points]="co2Points()"
+                    [from]="w.from"
+                    [to]="w.to"
+                    color="#006398"
+                    unit="PPM"
+                  />
+                  @if (co2Average() !== null) {
+                    <p class="border-t border-[#e5eeff] pt-2 font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">
+                      Promedio {{ period() }}: <span class="text-[#001229]">{{ co2Average()!.toFixed(0) }} PPM</span>
+                    </p>
+                  }
+                </div>
+
+                <!-- Noise -->
+                <div class="flex flex-col gap-2 rounded-[2px] border border-[rgba(196,198,206,0.3)] bg-[#f8f9ff] p-[13px]">
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 class="font-['Space_Grotesk'] font-bold text-[15px] leading-5 text-[#001229]">Presión Acústica (dB)</h3>
+                      <p class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] uppercase text-[#74777e]">Eje Y: decibeles · Eje X: hora UTC</p>
+                    </div>
+                    @if (noiseLatest() !== null) {
+                      <span class="rounded-[2px] bg-[#fef3c7] px-2 py-0.5 font-mono text-[10px] font-bold leading-3 tracking-[0.6px] text-[#78350f] whitespace-nowrap">
+                        {{ noiseLatest() }} dB<br />Actual
+                      </span>
+                    }
+                  </div>
+                  <!-- TODO(backend): Figma draws the 85 dBA limit line. Thresholds are not in PlantHistory. -->
+                  <app-telemetry-chart
+                    label="Presión acústica en decibeles"
+                    [points]="noisePoints()"
+                    [from]="w.from"
+                    [to]="w.to"
+                    color="#d97706"
+                    unit="dB"
+                    [decimals]="1"
+                  />
+                  @if (noiseAverage() !== null) {
+                    <p class="border-t border-[#e5eeff] pt-2 font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] text-[#44474d]">
+                      Promedio {{ period() }}: <span class="text-[#001229]">{{ noiseAverage()!.toFixed(1) }} dB</span>
+                    </p>
+                  }
+                </div>
+
+                <!-- Presence -->
+                <div class="flex flex-col gap-2 rounded-[2px] border border-[rgba(196,198,206,0.3)] bg-[#f8f9ff] p-[13px]">
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 class="font-['Space_Grotesk'] font-bold text-[15px] leading-5 text-[#001229]">Presencia en la Zona</h3>
+                      <p class="font-['Space_Grotesk'] font-bold text-[10px] leading-3 tracking-[0.6px] uppercase text-[#74777e]">Eje Y: estado · Eje X: hora UTC</p>
+                    </div>
+                    <span class="rounded-[2px] bg-[#cce5ff] px-2 py-0.5 font-mono text-[10px] font-bold leading-3 tracking-[0.6px] text-[#001d31] whitespace-nowrap">
+                      {{ presenceDetections() }} detecciones<br />en el periodo
+                    </span>
+                  </div>
+                  <!-- Figma plots people counts; the contract only has Detected / Cleared changes. -->
+                  <app-telemetry-chart
+                    label="Cambios de presencia detectada"
+                    [points]="presencePoints()"
+                    [from]="w.from"
+                    [to]="w.to"
+                    color="#0f2744"
+                    [binary]="true"
+                  />
+                </div>
+              </div>
+            }
+          </section>
+        }
+      </div>
+    }
+  </main>
+</app-shell>

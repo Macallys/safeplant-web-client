@@ -1,0 +1,201 @@
+- generic [ref=f15e4]:
+  - complementary "Navegación principal" [ref=f15e5]:
+    - generic [ref=f15e6]: SAFEPLANT
+    - navigation [ref=f15e9]:
+      - link "Panel de Control" [ref=f15e10] [cursor=pointer]:
+        - /url: /metrics
+      - link "Alertas" [ref=f15e13] [cursor=pointer]:
+        - /url: /alerts
+  - generic [ref=f15e16]:
+    - banner [ref=f15e17]:
+      - navigation "Ruta de navegación" [ref=f15e18]:
+        - list [ref=f15e19]:
+          - listitem [ref=f15e20]:
+            - generic [ref=f15e21]: SAFEPLANT
+          - listitem [ref=f15e22]:
+            - generic [ref=f15e23]: Vista de Consola
+      - generic [ref=f15e24]: encargado@safeplant.com
+    - main [ref=f15e26]:
+      - generic [ref=f15e27]:
+        - paragraph [ref=f15e28]:
+          - generic [ref=f15e29]: Operaciones de telemetría
+          - generic [ref=f15e30]: Gestión de incidentes
+        - heading "Registro de Alertas y Eventos de Seguridad" [level=1] [ref=f15e31]
+        - paragraph [ref=f15e32]: Alertas ambientales, acciones automáticas y lecturas del área en el periodo seleccionado.
+      - group "Filtros" [ref=f15e33]:
+        - generic [ref=f15e34]:
+          - generic [ref=f15e35]: "Zona:"
+          - combobox "Zona:" [ref=f15e37]:
+            - option "Zona A"
+            - option "Zona B"
+            - option "Zona C"
+            - option "Zona D"
+            - option "Zona E" [selected]
+        - generic [ref=f15e38]:
+          - generic [ref=f15e39]: "Periodo:"
+          - group "Periodo:" [ref=f15e40]:
+            - button "Últimas 1h" [ref=f15e41]
+            - button "Últimas 6h" [ref=f15e42]
+            - button "Últimas 12h" [ref=f15e43]
+            - button "Últimas 24h" [pressed] [ref=f15e44]
+        - button "Actualizar" [ref=f15e45]
+      - generic [ref=f15e46]:
+        - generic [ref=f15e47]:
+          - generic [ref=f15e48]:
+            - heading "Alertas activas" [level=2] [ref=f15e49]
+            - paragraph [ref=f15e50]:
+              - generic [ref=f15e51]: "1"
+              - generic [ref=f15e52]: Sin retirar
+          - generic [ref=f15e54]:
+            - heading "Resueltas en el periodo" [level=2] [ref=f15e55]
+            - paragraph [ref=f15e56]:
+              - generic [ref=f15e57]: "6"
+              - generic [ref=f15e58]: Alertas retiradas
+          - generic [ref=f15e59]:
+            - heading "Tiempo medio de resolución" [level=2] [ref=f15e60]
+            - paragraph [ref=f15e61]:
+              - generic [ref=f15e62]: "66"
+              - generic [ref=f15e63]: minutos
+          - generic [ref=f15e64]:
+            - heading "Acciones automáticas" [level=2] [ref=f15e65]
+            - paragraph [ref=f15e66]:
+              - generic [ref=f15e67]: 5/7
+              - generic [ref=f15e68]: Exitosas
+        - region [ref=f15e69]:
+          - generic [ref=f15e70]:
+            - heading "Flujo de Auditoría de Incidentes" [level=2] [ref=f15e71]
+            - generic [ref=f15e72]: 7 registradas
+          - table [ref=f15e74]:
+            - rowgroup [ref=f15e75]:
+              - row [ref=f15e76]:
+                - columnheader "Código de alerta" [ref=f15e77]
+                - columnheader "Levantada (UTC)" [ref=f15e78]
+                - columnheader "Retirada (UTC)" [ref=f15e79]
+                - columnheader "Duración" [ref=f15e80]
+                - columnheader "Estado" [ref=f15e81]
+            - rowgroup [ref=f15e82]:
+              - row [ref=f15e83]:
+                - rowheader "ALR-4520" [ref=f15e84]
+                - cell [ref=f15e85]:
+                  - paragraph [ref=f15e86]: 11:41:45
+                  - paragraph [ref=f15e87]: 04/10/2026
+                - cell [ref=f15e88]:
+                  - paragraph [ref=f15e89]: 12:12:23
+                  - paragraph [ref=f15e90]: 04/10/2026
+                - cell "31 min" [ref=f15e91]
+                - cell "Retirada" [ref=f15e92]
+              - row [ref=f15e94]:
+                - rowheader "ALR-4673" [ref=f15e95]
+                - cell [ref=f15e96]:
+                  - paragraph [ref=f15e97]: 11:11:06
+                  - paragraph [ref=f15e98]: 04/10/2026
+                - cell "—" [ref=f15e99]
+                - cell "En curso" [ref=f15e100]
+                - cell "Activa" [ref=f15e101]
+              - row [ref=f15e104]:
+                - rowheader "ALR-4405" [ref=f15e105]
+                - cell [ref=f15e106]:
+                  - paragraph [ref=f15e107]: 08:37:55
+                  - paragraph [ref=f15e108]: 04/10/2026
+                - cell [ref=f15e109]:
+                  - paragraph [ref=f15e110]: 09:08:33
+                  - paragraph [ref=f15e111]: 04/10/2026
+                - cell "31 min" [ref=f15e112]
+                - cell "Retirada" [ref=f15e113]
+              - row [ref=f15e115]:
+                - rowheader "ALR-4306" [ref=f15e116]
+                - cell [ref=f15e117]:
+                  - paragraph [ref=f15e118]: 04:32:49
+                  - paragraph [ref=f15e119]: 04/10/2026
+                - cell [ref=f15e120]:
+                  - paragraph [ref=f15e121]: 06:04:43
+                  - paragraph [ref=f15e122]: 04/10/2026
+                - cell "1 h 32 min" [ref=f15e123]
+                - cell "Retirada" [ref=f15e124]
+              - row [ref=f15e126]:
+                - rowheader "ALR-4276" [ref=f15e127]
+                - cell [ref=f15e128]:
+                  - paragraph [ref=f15e129]: 02:30:15
+                  - paragraph [ref=f15e130]: 04/10/2026
+                - cell [ref=f15e131]:
+                  - paragraph [ref=f15e132]: 04:02:10
+                  - paragraph [ref=f15e133]: 04/10/2026
+                - cell "1 h 32 min" [ref=f15e134]
+                - cell "Retirada" [ref=f15e135]
+          - navigation "Paginación de alertas" [ref=f15e137]:
+            - paragraph [ref=f15e138]: Mostrando 1–5 de 7 alertas registradas en las últimas 24h
+            - generic [ref=f15e139]:
+              - button "Anterior" [disabled] [ref=f15e140]
+              - button "Página 1" [ref=f15e141]: "1"
+              - button "Página 2" [ref=f15e142]: "2"
+              - button "Siguiente" [ref=f15e143]
+        - region [ref=f15e144]:
+          - generic [ref=f15e145]:
+            - generic [ref=f15e146]:
+              - heading "Historial de Telemetría y Variación Temporal" [level=2] [ref=f15e147]
+              - generic [ref=f15e148]: 3 canales
+            - paragraph [ref=f15e149]: Curvas de CO₂, ruido y presencia de Zona E en las últimas 24h.
+          - generic [ref=f15e150]:
+            - generic [ref=f15e151]:
+              - generic [ref=f15e152]:
+                - generic [ref=f15e153]:
+                  - heading "Variación de CO₂" [level=3] [ref=f15e154]
+                  - paragraph [ref=f15e155]: "Eje Y: PPM · Eje X: hora UTC"
+                - generic [ref=f15e156]: 692 PPMActual
+              - generic [ref=f15e157]:
+                - group "Variación de CO₂ en PPM. Usa las flechas para recorrer las lecturas." [ref=f15e158]:
+                  - img [aria-hidden] [ref=f15e159]:
+                    - generic [ref=f15e160]: "400"
+                    - generic [ref=f15e161]: "600"
+                    - generic [ref=f15e162]: "800"
+                    - generic [ref=f15e163]: "1000"
+                    - generic [ref=f15e164]: 18:50
+                    - generic [ref=f15e165]: 00:50
+                    - generic [ref=f15e166]: 06:50
+                    - generic [ref=f15e167]: 12:50
+                    - generic [ref=f15e168]: 18:50
+                    - generic [ref=f15e172]: Pico 927 PPM
+                - group [ref=f15e173]:
+                  - generic "Ver datos" [ref=f15e174] [cursor=pointer]
+              - paragraph [ref=f15e175]: "Promedio 24h: 630 PPM"
+            - generic [ref=f15e176]:
+              - generic [ref=f15e177]:
+                - generic [ref=f15e178]:
+                  - heading "Presión Acústica (dB)" [level=3] [ref=f15e179]
+                  - paragraph [ref=f15e180]: "Eje Y: decibeles · Eje X: hora UTC"
+                - generic [ref=f15e181]: 69.3 dBActual
+              - generic [ref=f15e182]:
+                - group "Presión acústica en decibeles. Usa las flechas para recorrer las lecturas." [ref=f15e183]:
+                  - img [aria-hidden] [ref=f15e184]:
+                    - generic [ref=f15e185]: "65"
+                    - generic [ref=f15e186]: "70"
+                    - generic [ref=f15e187]: "75"
+                    - generic [ref=f15e188]: "80"
+                    - generic [ref=f15e189]: "85"
+                    - generic [ref=f15e190]: 18:50
+                    - generic [ref=f15e191]: 00:50
+                    - generic [ref=f15e192]: 06:50
+                    - generic [ref=f15e193]: 12:50
+                    - generic [ref=f15e194]: 18:50
+                    - generic [ref=f15e198]: Pico 81.4 dB
+                - group [ref=f15e199]:
+                  - generic "Ver datos" [ref=f15e200] [cursor=pointer]
+              - paragraph [ref=f15e201]: "Promedio 24h: 73.1 dB"
+            - generic [ref=f15e202]:
+              - generic [ref=f15e203]:
+                - generic [ref=f15e204]:
+                  - heading "Presencia en la Zona" [level=3] [ref=f15e205]
+                  - paragraph [ref=f15e206]: "Eje Y: estado · Eje X: hora UTC"
+                - generic [ref=f15e207]: 5 deteccionesen el periodo
+              - generic [ref=f15e208]:
+                - group "Cambios de presencia detectada. Usa las flechas para recorrer las lecturas." [ref=f15e209]:
+                  - img [aria-hidden] [ref=f15e210]:
+                    - generic [ref=f15e211]: "No"
+                    - generic [ref=f15e212]: Sí
+                    - generic [ref=f15e213]: 18:50
+                    - generic [ref=f15e214]: 00:50
+                    - generic [ref=f15e215]: 06:50
+                    - generic [ref=f15e216]: 12:50
+                    - generic [ref=f15e217]: 18:50
+                - group [ref=f15e220]:
+                  - generic "Ver datos" [ref=f15e221] [cursor=pointer]
