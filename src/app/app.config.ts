@@ -6,6 +6,8 @@ import { authInterceptor } from './core/auth.interceptor';
 import { AUTH_API, AuthMockApi } from './features/auth/auth.mock.api';
 import { METRICS_API } from './features/metrics/metrics.api';
 import { MetricsMockApi } from './features/metrics/metrics.mock.api';
+import { ACCOUNTS_API } from './features/accounts/accounts.api';
+import { AccountsMockApi } from './features/accounts/accounts.mock.api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,5 +20,8 @@ export const appConfig: ApplicationConfig = {
     // TODO: swap mock → real: replace `useClass: MetricsMockApi` with `useClass: MetricsApi`
     // (import MetricsApi from './features/metrics/metrics.api')
     { provide: METRICS_API, useClass: MetricsMockApi },
+    // TODO: swap mock → real: replace `useClass: AccountsMockApi` with `useClass: AccountsApi`
+    // (import AccountsApi from './features/accounts/accounts.api')
+    { provide: ACCOUNTS_API, useClass: AccountsMockApi },
   ],
 };

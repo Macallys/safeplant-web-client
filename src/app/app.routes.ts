@@ -30,5 +30,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/metrics/history/history').then((m) => m.AlertsHistory),
   },
+  {
+    path: 'users',
+    canActivate: [sessionGuard],
+    loadComponent: () =>
+      import('./features/accounts/directory/accounts').then((m) => m.Accounts),
+  },
   { path: '', redirectTo: 'signIn', pathMatch: 'full' },
 ];

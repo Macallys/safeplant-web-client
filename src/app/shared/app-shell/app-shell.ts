@@ -3,7 +3,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Session } from '../../core/session';
 
-export type ShellSection = 'dashboard' | 'alerts';
+export type ShellSection = 'dashboard' | 'alerts' | 'accounts';
 
 @Component({
   selector: 'app-shell',

@@ -51,6 +51,23 @@
         <img ngSrc="assets/dashboard/nav-chevron.svg" width="4" height="7" alt="" class="w-[4.317px] h-[7px]" />
       }
     </a>
+    <a
+      routerLink="/users"
+      [attr.aria-current]="active() === 'accounts' ? 'page' : null"
+      class="flex items-center justify-between rounded-[2px] px-3 py-2 text-[#f8f9ff]
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      [class]="active() === 'accounts' ? 'bg-[#006398] text-white' : 'hover:bg-[rgba(0,99,152,0.4)]'"
+    >
+      <span class="flex items-center gap-2">
+        <img ngSrc="assets/dashboard/nav-users.svg" width="15" height="14" alt="" class="w-[15px] h-[13.5px]" />
+        <span class="font-['Space_Grotesk'] font-semibold text-[13px] leading-4 tracking-[0.26px]">Control de Usuarios</span>
+      </span>
+      @if (active() === 'accounts') {
+        <img ngSrc="assets/dashboard/nav-chevron-active.svg" width="4" height="7" alt="" class="w-[4.317px] h-[7px]" />
+      } @else {
+        <img ngSrc="assets/dashboard/nav-chevron.svg" width="4" height="7" alt="" class="w-[4.317px] h-[7px]" />
+      }
+    </a>
     <!-- Figma: Umbrales and Dispositivos are mobile/Supervisor operations (403 on web). -->
   </nav>
 </aside>
