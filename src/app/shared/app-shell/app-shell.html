@@ -89,8 +89,6 @@
         </li>
       </ol>
     </nav>
-    <!-- The contract has no user name or job title: show the sign-in email.
-         TODO(backend): CloseSession path is "To discuss" — add the logout action when closed. -->
     @if (email(); as userEmail) {
       <div class="flex items-center gap-2.5">
         <img
@@ -103,6 +101,15 @@
         <span class="max-w-[40vw] truncate font-['Space_Grotesk'] font-bold text-[11px] leading-[14px] tracking-[0.55px] text-[#0b1c30]">
           {{ userEmail }}
         </span>
+        <button
+          type="button"
+          (click)="logout()"
+          [disabled]="leaving()"
+          class="font-['Space_Grotesk'] font-semibold text-[11px] leading-[14px] text-[#006398] underline-offset-2 hover:underline
+                 rounded-sm focus-visible:outline-2 focus-visible:outline-[#006398] disabled:opacity-60"
+        >
+          Salir
+        </button>
       </div>
     }
   </header>

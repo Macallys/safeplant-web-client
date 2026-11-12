@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, filter, map, of, startWith, switchMap } from 'rxjs';
 import { AppShell } from '../../../shared/app-shell/app-shell';
 import { METRICS_API } from '../metrics.api';
@@ -13,7 +14,10 @@ type Period = '1h' | '6h' | '12h' | '24h';
 const PERIOD_HOURS: Record<Period, number> = { '1h': 1, '6h': 6, '12h': 12, '24h': 24 };
 const PAGE_SIZE = 5;
 
-type Load<T> = { status: 'loading' } | { status: 'ready'; data: T } | { status: 'error' };
+type Load<T> =
+  | { status: 'loading' }
+  | { status: 'ready'; data: T }
+  | { status: 'error'; message?: string };
 
 function average(values: number[]): number | null {
   return values.length ? values.reduce((sum, v) => sum + v, 0) / values.length : null;
@@ -71,7 +75,12 @@ export class AlertsHistory {
       switchMap((req) =>
         this.api.getHistory(req.areaId, new Date(req.from).toISOString(), new Date(req.to).toISOString()).pipe(
           map((data) => ({ req, load: { status: 'ready', data } as Load<PlantHistoryResponse> })),
-          catchError(() => of({ req, load: { status: 'error' } as Load<PlantHistoryResponse> })),
+          catchError((error: unknown) =>
+            of({
+              req,
+              load: { status: 'error', message: historyError(error) } as Load<PlantHistoryResponse>,
+            }),
+          ),
           startWith({ req, load: { status: 'loading' } as Load<PlantHistoryResponse> }),
         ),
       ),
@@ -79,6 +88,12 @@ export class AlertsHistory {
   );
 
   protected readonly status = computed(() => this.result()?.load.status ?? 'loading');
+  protected readonly errorMessage = computed(() => {
+    const load = this.result()?.load;
+    return load?.status === 'error'
+      ? (load.message ?? 'No se pudo cargar el historial del área. Inténtalo de nuevo.')
+      : '';
+  });
   protected readonly window = computed(() => this.result()?.req ?? null);
 
   // Refetch keeps the previous frame visible (dimmed) instead of flashing a skeleton.
@@ -169,4 +184,21 @@ export class AlertsHistory {
     const minutes = Math.round((Date.parse(withdrawnAt) - Date.parse(raisedAt)) / 60_000);
     return minutes < 60 ? `${minutes} min` : `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
   }
+}
+
+function historyError(error: unknown): string {
+  if (error instanceof HttpErrorResponse && error.status === 422 && readCode(error.error) === 'invalid_period') {
+    return 'El periodo tiene que empezar antes de terminar y durar 31 días como máximo.';
+  }
+
+  return 'No se pudo cargar el historial del área. Inténtalo de nuevo.';
+}
+
+function readCode(body: unknown): string | null {
+  if (typeof body !== 'object' || body === null || !('code' in body)) {
+    return null;
+  }
+
+  const code = body.code;
+  return typeof code === 'string' ? code : null;
 }

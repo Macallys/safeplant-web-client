@@ -4,9 +4,20 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PlantHistoryResponse, PlantMetricsDashboardResponse } from './metrics.models';
 
+export interface ThresholdResponse {
+  areaId: string;
+  co2LimitPpm: number;
+  noiseLimitDb: number;
+}
+
 export interface MetricsApiContract {
   getDashboard(): Observable<PlantMetricsDashboardResponse>;
   getHistory(areaId: string, from: string, to: string): Observable<PlantHistoryResponse>;
+  configureThresholds(
+    areaId: string,
+    co2LimitPpm: number,
+    noiseLimitDb: number,
+  ): Observable<ThresholdResponse>;
 }
 
 export const METRICS_API = new InjectionToken<MetricsApiContract>('METRICS_API');
@@ -27,6 +38,17 @@ export class MetricsApi implements MetricsApiContract {
     return this.http.get<PlantHistoryResponse>(
       `${environment.apiBaseUrl}/api/v1/areas/${encodeURIComponent(areaId)}/history`,
       { params: { from, to } },
+    );
+  }
+
+  configureThresholds(
+    areaId: string,
+    co2LimitPpm: number,
+    noiseLimitDb: number,
+  ): Observable<ThresholdResponse> {
+    return this.http.put<ThresholdResponse>(
+      `${environment.apiBaseUrl}/api/v1/areas/${encodeURIComponent(areaId)}/thresholds`,
+      { co2LimitPpm, noiseLimitDb },
     );
   }
 }

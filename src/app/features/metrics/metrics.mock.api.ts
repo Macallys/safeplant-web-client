@@ -1,6 +1,6 @@
 import { Service } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
-import { MetricsApiContract } from './metrics.api';
+import { MetricsApiContract, ThresholdResponse } from './metrics.api';
 import {
   ActuatorType,
   PlantHistoryResponse,
@@ -21,6 +21,8 @@ const DASHBOARD: PlantMetricsDashboardResponse = {
       severity: 'None',
       alertActive: false,
       highlighted: false,
+      co2LimitPpm: 1000,
+      noiseLimitDb: 85,
     },
     {
       areaId: 'area-b',
@@ -31,6 +33,8 @@ const DASHBOARD: PlantMetricsDashboardResponse = {
       severity: 'Medium',
       alertActive: true,
       highlighted: false,
+      co2LimitPpm: 800,
+      noiseLimitDb: 80,
     },
     {
       areaId: 'area-c',
@@ -41,6 +45,8 @@ const DASHBOARD: PlantMetricsDashboardResponse = {
       severity: 'High',
       alertActive: true,
       highlighted: true,
+      co2LimitPpm: 600,
+      noiseLimitDb: 75,
     },
     {
       areaId: 'area-d',
@@ -51,6 +57,8 @@ const DASHBOARD: PlantMetricsDashboardResponse = {
       severity: 'None',
       alertActive: false,
       highlighted: false,
+      co2LimitPpm: 1000,
+      noiseLimitDb: 85,
     },
     {
       // Area without readings yet: the Edge has not synced.
@@ -62,6 +70,8 @@ const DASHBOARD: PlantMetricsDashboardResponse = {
       severity: null,
       alertActive: false,
       highlighted: false,
+      co2LimitPpm: null,
+      noiseLimitDb: null,
     },
   ],
 };
@@ -158,5 +168,13 @@ export class MetricsMockApi implements MetricsApiContract {
 
   getHistory(areaId: string, from: string, to: string): Observable<PlantHistoryResponse> {
     return of(buildHistory(areaId, from, to)).pipe(delay(600));
+  }
+
+  configureThresholds(
+    areaId: string,
+    co2LimitPpm: number,
+    noiseLimitDb: number,
+  ): Observable<ThresholdResponse> {
+    return of({ areaId, co2LimitPpm, noiseLimitDb }).pipe(delay(400));
   }
 }

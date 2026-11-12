@@ -3,6 +3,7 @@ import { computed, Injectable, signal } from '@angular/core';
 interface StoredSession {
   accessToken: string;
   expiresAt: string;
+  role: string;
   // Typed by the user at sign-in; the contract has no user name.
   email?: string;
 }
@@ -16,6 +17,7 @@ export class Session {
   readonly accessToken = computed(() => this.current()?.accessToken ?? null);
   readonly expiresAt = computed(() => this.current()?.expiresAt ?? null);
   readonly email = computed(() => this.current()?.email ?? null);
+  readonly isPlantManager = computed(() => this.openFor('PlantManager'));
 
   start(session: StoredSession): void {
     this.current.set(session);
@@ -33,6 +35,16 @@ export class Session {
     } catch {
       // storage unavailable
     }
+  }
+
+  private openFor(role: string): boolean {
+    const current = this.current();
+    if (!current?.accessToken || current.role !== role) {
+      return false;
+    }
+
+    const expires = Date.parse(current.expiresAt);
+    return Number.isFinite(expires) && expires > Date.now();
   }
 }
 

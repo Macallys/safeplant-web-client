@@ -88,7 +88,7 @@
       </p>
     } @else if (status() === 'error') {
       <div role="alert" class="flex flex-col items-start gap-3 rounded-[2px] border border-red-200 bg-red-50 px-4 py-3">
-        <p class="text-[13px] text-red-700">No se pudo cargar el historial del área. Inténtalo de nuevo.</p>
+        <p class="text-[13px] text-red-700">{{ errorMessage() }}</p>
         <button
           type="button"
           (click)="reload()"

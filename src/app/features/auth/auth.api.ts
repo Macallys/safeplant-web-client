@@ -25,4 +25,8 @@ export class AuthApi implements AuthApiContract {
   createUserAccount(req: CreateUserAccountRequest): Observable<UserAccountResponse> {
     return this.http.post<UserAccountResponse>(`${environment.apiBaseUrl}/api/v1/users`, req);
   }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(`${environment.apiBaseUrl}/api/v1/auth/logout`, null);
+  }
 }

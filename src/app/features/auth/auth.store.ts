@@ -56,7 +56,12 @@ export class AuthStore {
       this.signInError.set('Esta cuenta no tiene acceso al cliente web.');
       return;
     }
-    this.session.start({ accessToken: res.accessToken, expiresAt: res.expiresAt, email });
+    this.session.start({
+      accessToken: res.accessToken,
+      expiresAt: res.expiresAt,
+      role: res.role,
+      email,
+    });
     this.signedIn.set(true);
   }
 

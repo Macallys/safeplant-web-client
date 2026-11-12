@@ -138,6 +138,7 @@
                   <th scope="col" class="px-3 py-4">Nivel de ruido</th>
                   <th scope="col" class="px-3 py-4">Presencia</th>
                   <th scope="col" class="px-3 py-4 text-right">Alarma / Estado</th>
+                  <th scope="col" class="px-3 py-4">Umbrales</th>
                 </tr>
               </thead>
               <tbody>
@@ -172,7 +173,6 @@
                       } @else {
                         <span class="text-[12px] text-[#44474d]">Sin lectura</span>
                       }
-                      <!-- Figma: progress bar against the limit. The CO₂ limit is not in this response. -->
                     </td>
 
                     <!-- Noise -->
@@ -228,6 +228,43 @@
                           </span>
                         }
                       </div>
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <form class="flex flex-wrap items-end gap-2" (submit)="saveLimits(area, $event)">
+                        <label class="grid gap-1 font-['Space_Grotesk'] text-[10px] leading-3 text-[#44474d]">
+                          CO₂ ppm
+                          <input
+                            class="w-20 border border-[#c4c6ce] bg-white px-2 py-1 text-[13px] text-[#001229]"
+                            type="number"
+                            inputmode="numeric"
+                            [value]="drafts()[area.areaId]?.co2 ?? ''"
+                            (input)="setDraft(area.areaId, 'co2', $event)"
+                          />
+                        </label>
+                        <label class="grid gap-1 font-['Space_Grotesk'] text-[10px] leading-3 text-[#44474d]">
+                          Ruido dB
+                          <input
+                            class="w-20 border border-[#c4c6ce] bg-white px-2 py-1 text-[13px] text-[#001229]"
+                            type="number"
+                            inputmode="numeric"
+                            [value]="drafts()[area.areaId]?.noise ?? ''"
+                            (input)="setDraft(area.areaId, 'noise', $event)"
+                          />
+                        </label>
+                        <button
+                          type="submit"
+                          [disabled]="savingId() === area.areaId"
+                          class="rounded-[2px] bg-[#001229] px-3 py-1 font-['Space_Grotesk'] font-semibold text-[12px] text-white
+                                 hover:bg-[#0b2644] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006398]
+                                 disabled:opacity-60"
+                        >
+                          Guardar
+                        </button>
+                        @if (limitNote()[area.areaId]; as note) {
+                          <p class="basis-full text-[12px] text-[#44474d]" role="status">{{ note }}</p>
+                        }
+                      </form>
                     </td>
                   </tr>
                 }

@@ -1,13 +1,13 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { Header } from '../../../shared/header/header';
 import { AuthStore } from '../auth.store';
 
 @Component({
   selector: 'app-sign-in',
-  imports: [ReactiveFormsModule, RouterLink, NgOptimizedImage, Header],
+  imports: [ReactiveFormsModule, NgOptimizedImage, Header],
   templateUrl: './sign-in.html',
   host: { class: 'block min-h-screen bg-[#f8f9ff]' },
 })

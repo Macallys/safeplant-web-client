@@ -8,11 +8,6 @@ export const routes: Routes = [
       import('./features/auth/sign-in/sign-in').then((m) => m.SignIn),
   },
   {
-    path: 'signUp',
-    loadComponent: () =>
-      import('./features/auth/sign-up/sign-up').then((m) => m.SignUp),
-  },
-  {
     path: 'metrics',
     canActivate: [sessionGuard],
     loadComponent: () =>

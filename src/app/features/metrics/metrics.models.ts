@@ -15,6 +15,8 @@ export interface PlantMetricsDashboardItem {
   severity: ExposureSeverity | null;
   alertActive: boolean;
   highlighted: boolean;
+  co2LimitPpm: number | null;
+  noiseLimitDb: number | null;
 }
 
 export interface PlantMetricsDashboardResponse {
